@@ -18,7 +18,7 @@ public class Timer {
 	 * return currentTime
 	 * @return Integer value of currentTime
 	 */
-	public int getTime(){
+	public int getCurrentTime(){
 		return currentTime;
 	}
 	/**
@@ -27,5 +27,9 @@ public class Timer {
 	 */
 	public void elapsed(int timeElapsed){
 		this.currentTime += timeElapsed;
+	}
+	
+	public void resetTime(){
+		this.currentTime =0;
 	}
 }

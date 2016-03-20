@@ -50,4 +50,13 @@ public class ProcessGenerator {
 		
 		return arrayOfProcesses;
 	}
+	/**
+	 * sets new borders for processTime for generated processes
+	 * @param newMax new maxProcessTime
+	 * @param newMin new minProcessTime
+	 */
+	public void changeBorders(int newMax, int newMin){
+		this.maxProcessTime  = newMax;
+		this.minProcessTime = newMin;
+	}
 }
