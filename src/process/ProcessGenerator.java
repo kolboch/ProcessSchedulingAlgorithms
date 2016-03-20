@@ -28,4 +28,14 @@ public class ProcessGenerator {
 		
 		return a;
 	}
+	
+	public Process[] generateProcesses(int numberOfProcesses){
+		Process[]arrayOfProcesses = new Process[numberOfProcesses];
+		
+		for(int i=0; i<arrayOfProcesses.length; i++){
+			arrayOfProcesses[i] = generateProcess();
+		}
+		
+		return arrayOfProcesses;
+	}
 }
