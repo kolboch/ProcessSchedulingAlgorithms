@@ -2,6 +2,8 @@ package resource;
 
 import java.util.Queue;
 import java.util.PriorityQueue;
+import process.Process;
+import process.ProcessGenerator;
 
 /**
  * main function is performing different algorithms on delivered processes:
@@ -11,5 +13,13 @@ import java.util.PriorityQueue;
  *
  */
 public class Resource {
-
+	
+	private Timer timer;
+	private ProcessGenerator procGen1;
+	private Queue<Process> initialQueue;
+	private Queue<Process> dispossedQueue;
+	
+	
+	
+	
 }

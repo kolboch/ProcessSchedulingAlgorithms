@@ -87,4 +87,8 @@ public class Process {
 	public void addAwaitTime(int time){
 		this.awaitTime += time;
 	}
+	
+	public String toString(){
+		return String.format("ProcessTime:%4d approachTime:%3d awaitTime:%4d%n",processTime, approachTime, awaitTime);
+	}
 }
