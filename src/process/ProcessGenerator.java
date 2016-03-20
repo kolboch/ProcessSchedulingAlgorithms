@@ -14,12 +14,20 @@ public class ProcessGenerator {
 	private int minProcessTime;
 	
 	private static int approachTime=0;
-	
+	/**
+	 * ProcessGenerator constructor, takes as parameters two Integers
+	 * @param int maxPT sets maxProcessTime border
+	 * @param int minPT sets minProcessTime border
+	 */
 	public ProcessGenerator(int maxPT, int minPT){
 		this.maxProcessTime = maxPT;
 		this.minProcessTime = minPT;
 	}
 	
+	/**
+	 * generate process with random processTime from specified borders
+	 * @return Process
+	 */
 	public Process generateProcess(){
 		
 		int processTime = rand.nextInt(maxProcessTime-minProcessTime)+ minProcessTime;
@@ -28,7 +36,11 @@ public class ProcessGenerator {
 		
 		return a;
 	}
-	
+	/**
+	 * generates random processes with specified processTime borders
+	 * @param numberOfProcesses specified number of Processes in returned array
+	 * @return Process[]
+	 */
 	public Process[] generateProcesses(int numberOfProcesses){
 		Process[]arrayOfProcesses = new Process[numberOfProcesses];
 		
