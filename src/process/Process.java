@@ -94,6 +94,10 @@ public class Process {
 	public String toString(){
 		return String.format("ProcessTime:%4d WasDoneTime:%3d approachTime:%3d awaitTime:%4d%n",processTime, wasDoneTime, approachTime, awaitTime);
 	}
+	public void doProcessFor(int time){
+		this.processTime -= time;
+		this.wasDoneTime += time;
+	}
 	
 	public void doProcessForTimeUnit(){
 		this.processTime -= 1;

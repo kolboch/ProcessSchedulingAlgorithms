@@ -75,18 +75,71 @@ public class Resource {
 	public void FCFSAlgorithm(){
 		resetTimer();
 		while(!initial.isEmpty()){
-			
-			currentProcess = initial.poll();
-			
-			while(!currentProcess.isDone()){
-				currentProcess.doProcessForTimeUnit();
-				addWaitingTime();
+			if(isNextAvailable()){
+				currentProcess = initial.poll();
+				
+				while(!currentProcess.isDone()){
+					currentProcess.doProcessForTimeUnit();
+					addWaitingTime(1);
+					timer.elapsed(1);
+				}
+				
+				moveCurrentToDone();
+			}
+			else
 				timer.elapsed(1);
+		}
+	}
+	
+	public void RRAlgorithm(int timeQuantum){
+		resetTimer();
+		
+		while(!initial.isEmpty() || !dispossed.isEmpty()){
+			if(currentProcess == null){
+				if(isNextAvailable())
+					currentProcess = initial.poll();
+				else if(dispossed.isEmpty())
+					timer.elapsed(1);
+				else
+					currentProcess = dispossed.poll();
 			}
 			
-			moveCurrentToDone();
-			
+			else {
+				
+				if(currentProcess.isDone()){
+					moveCurrentToDone();
+					if(isNextAvailable()){
+						getNextProcess();
+					}
+					else if(!dispossed.isEmpty())
+						currentProcess = dispossed.poll();
+				}
+				else{
+				
+				currentProcess.doProcessFor(timeQuantum);
+				timer.elapsed(timeQuantum);
+				
+					if(isNextAvailable()){
+						Process temp = initial.poll();
+					
+						disposseProcess();
+						currentProcess = temp;
+						
+							
+					}
+					else if(!dispossed.isEmpty()){
+						disposseProcess();
+						currentProcess = dispossed.poll();
+					}
+						
+				addWaitingTime(timeQuantum);
+				}
+			}
 		}
+				
+				
+			
+		
 	}
 	
 	public void SJFAlgorithm(){
@@ -127,7 +180,7 @@ public class Resource {
 							dispossed.add(temp);
 							
 					}
-				addWaitingTime();
+				addWaitingTime(1);
 				}
 				
 				
@@ -161,17 +214,17 @@ public class Resource {
 			return false;
 	}
 	
-	private void addWaitingTime(){
+	private void addWaitingTime(int time){
 		if(initial!=null){
 			for(Process p: initial){
-				if(p.getApproachTime() >= timer.getCurrentTime())
-					p.addAwaitTime(1);
+				if(p.getApproachTime() > timer.getCurrentTime())
+					p.addAwaitTime(time);
 			}
 		}
 		if(dispossed != null){
 			for(Process p: dispossed){
-				if(p.getApproachTime() >= timer.getCurrentTime())
-					p.addAwaitTime(1);
+				if(p.getApproachTime() > timer.getCurrentTime())
+					p.addAwaitTime(time);
 			}
 		}
 	}
