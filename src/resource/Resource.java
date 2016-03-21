@@ -46,8 +46,10 @@ public class Resource {
 	public void printDoneData(){
 		double averageWaitingTime=0;
 		for(Process p : doneProcesses){
+			if(p != null){
 			averageWaitingTime += p.getAwaitTime();
 			System.out.print(p.toString());
+			}
 		}
 		averageWaitingTime /= doneProcesses.length;
 		System.out.printf("For:%5d  Processes Average waiting time was:%6.1f%n" , doneProcesses.length, averageWaitingTime);
@@ -71,7 +73,7 @@ public class Resource {
 	}
 	
 	public void FCFSAlgorithm(){
-		
+		resetTimer();
 		while(!initial.isEmpty()){
 			
 			currentProcess = initial.poll();
@@ -79,11 +81,84 @@ public class Resource {
 			while(!currentProcess.isDone()){
 				currentProcess.doProcessForTimeUnit();
 				addWaitingTime();
+				timer.elapsed(1);
 			}
 			
 			moveCurrentToDone();
 			
 		}
+	}
+	
+	public void SJFAlgorithm(){
+		
+		resetTimer();
+		while(!initial.isEmpty() || !dispossed.isEmpty()){
+			
+			if(currentProcess == null){
+				if(isNextAvailable())
+					currentProcess = initial.poll();
+				else if(dispossed.isEmpty())
+					timer.elapsed(1);
+				else
+					currentProcess = dispossed.poll();
+			}
+			else {
+				
+				if(currentProcess.isDone()){
+					moveCurrentToDone();
+					if(isNextAvailable()){
+						getNextProcess();
+					}
+					else if(!dispossed.isEmpty())
+						currentProcess = dispossed.poll();
+				}
+				else{
+				
+				currentProcess.doProcessForTimeUnit();
+				timer.elapsed(1);
+				
+					if(isNextAvailable()){
+						Process temp = initial.poll();
+						if(isShorter(temp)){
+							disposseProcess();
+							currentProcess = temp;
+						}
+						else 
+							dispossed.add(temp);
+							
+					}
+				addWaitingTime();
+				}
+				
+				
+			}
+			
+			
+			
+			
+		}
+	}
+	
+	private void resetTimer(){
+		this.timer.resetTime();
+	}
+	private boolean isShorter(Process p){
+		return currentProcess.getProcessTime() + currentProcess.getWasDoneTime() > p.getProcessTime() + p.getWasDoneTime();
+	}
+	private void getNextProcess() throws NullPointerException{
+		try{
+			currentProcess = initial.poll();
+		}catch(NullPointerException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean isNextAvailable(){
+		
+		if(!initial.isEmpty() &&  initial.peek().getApproachTime() >= timer.getCurrentTime())
+			return true;
+		else
+			return false;
 	}
 	
 	private void addWaitingTime(){
