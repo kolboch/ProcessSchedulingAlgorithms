@@ -19,6 +19,10 @@ public class Resource {
 	private Queue<Process> initial;
 	private Queue<Process> dispossed;
 	
+	public Resource(){
+		
+	}
+	
 	
 	
 	

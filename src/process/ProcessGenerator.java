@@ -12,16 +12,16 @@ public class ProcessGenerator {
 	
 	private int maxProcessTime;
 	private int minProcessTime;
-	
-	private static int approachTime=0;
+	private int maxApproachTime;
 	/**
 	 * ProcessGenerator constructor, takes as parameters two Integers
 	 * @param int maxPT sets maxProcessTime border
 	 * @param int minPT sets minProcessTime border
 	 */
-	public ProcessGenerator(int maxPT, int minPT){
+	public ProcessGenerator(int maxPT, int minPT, int maxApproachTime){
 		this.maxProcessTime = maxPT;
 		this.minProcessTime = minPT;
+		this.maxApproachTime = maxApproachTime;
 	}
 	
 	/**
@@ -32,7 +32,7 @@ public class ProcessGenerator {
 		
 		int processTime = rand.nextInt(maxProcessTime-minProcessTime)+ minProcessTime;
 		
-		Process a = new Process(processTime , approachTime++);
+		Process a = new Process(processTime , rand.nextInt(maxApproachTime));
 		
 		return a;
 	}
@@ -55,8 +55,9 @@ public class ProcessGenerator {
 	 * @param newMax new maxProcessTime
 	 * @param newMin new minProcessTime
 	 */
-	public void changeBorders(int newMax, int newMin){
+	public void changeBorders(int newMax, int newMin, int newApproachMax){
 		this.maxProcessTime  = newMax;
 		this.minProcessTime = newMin;
+		this.maxApproachTime = newApproachMax;
 	}
 }
