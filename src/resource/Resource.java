@@ -16,8 +16,8 @@ public class Resource {
 	
 	private Timer timer;
 	private ProcessGenerator procGen1;
-	private Queue<Process> initialQueue;
-	private Queue<Process> dispossedQueue;
+	private Queue<Process> initial;
+	private Queue<Process> dispossed;
 	
 	
 	
