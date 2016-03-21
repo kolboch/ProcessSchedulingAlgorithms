@@ -1,4 +1,7 @@
 package process;
+
+
+
 /**
  * process Class, has information about process,waiting,and come time.
  * @author Karol
@@ -91,4 +94,7 @@ public class Process {
 	public String toString(){
 		return String.format("ProcessTime:%4d approachTime:%3d awaitTime:%4d%n",processTime, approachTime, awaitTime);
 	}
+	
+	
+	
 }

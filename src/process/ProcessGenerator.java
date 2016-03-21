@@ -17,11 +17,14 @@ public class ProcessGenerator {
 	 * ProcessGenerator constructor, takes as parameters two Integers
 	 * @param int maxPT sets maxProcessTime border
 	 * @param int minPT sets minProcessTime border
+	 * @throws IllegalArgumentException
 	 */
-	public ProcessGenerator(int maxPT, int minPT, int maxApproachTime){
+	public ProcessGenerator(int maxPT, int minPT, int maxApproachTime)throws IllegalArgumentException{
 		this.maxProcessTime = maxPT;
 		this.minProcessTime = minPT;
 		this.maxApproachTime = maxApproachTime;
+		if(minPT>maxPT)
+			throw new IllegalArgumentException("min ProcessTime cannot be higher than max ProcessTime");
 	}
 	
 	/**

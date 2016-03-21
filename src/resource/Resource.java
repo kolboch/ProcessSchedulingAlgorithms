@@ -20,7 +20,8 @@ public class Resource {
 	private Queue<Process> dispossed;
 	
 	public Resource(){
-		
+		timer = new Timer();
+		procGen1 = new ProcessGenerator(50,10,200);
 	}
 	
 	
