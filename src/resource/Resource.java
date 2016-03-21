@@ -44,9 +44,14 @@ public class Resource {
 	}
 	
 	public void printDoneData(){
+		double averageWaitingTime=0;
 		for(Process p : doneProcesses){
+			averageWaitingTime += p.getAwaitTime();
 			System.out.print(p.toString());
 		}
+		averageWaitingTime /= doneProcesses.length;
+		System.out.printf("For:%5d  Processes Average waiting time was:%6.1f%n" , doneProcesses.length, averageWaitingTime);
+		
 	}
 	
 	private void disposseProcess() throws NullPointerException{
@@ -65,7 +70,36 @@ public class Resource {
 			throw new IndexOutOfBoundsException("IsDone is full");
 	}
 	
+	public void FCFSAlgorithm(){
+		
+		while(!initial.isEmpty()){
+			
+			currentProcess = initial.poll();
+			
+			while(!currentProcess.isDone()){
+				currentProcess.doProcessForTimeUnit();
+				addWaitingTime();
+			}
+			
+			moveCurrentToDone();
+			
+		}
+	}
 	
+	private void addWaitingTime(){
+		if(initial!=null){
+			for(Process p: initial){
+				if(p.getApproachTime() >= timer.getCurrentTime())
+					p.addAwaitTime(1);
+			}
+		}
+		if(dispossed != null){
+			for(Process p: dispossed){
+				if(p.getApproachTime() >= timer.getCurrentTime())
+					p.addAwaitTime(1);
+			}
+		}
+	}
 	
 	
 	

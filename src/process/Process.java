@@ -92,7 +92,7 @@ public class Process {
 	}
 	
 	public String toString(){
-		return String.format("ProcessTime:%4d approachTime:%3d awaitTime:%4d%n",processTime, approachTime, awaitTime);
+		return String.format("ProcessTime:%4d WasDoneTime:%3d approachTime:%3d awaitTime:%4d%n",processTime, wasDoneTime, approachTime, awaitTime);
 	}
 	
 	public void doProcessForTimeUnit(){
