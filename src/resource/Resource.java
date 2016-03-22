@@ -22,11 +22,16 @@ public class Resource {
 	private Process[]doneProcesses;
 	private int doneCounter=0;
 	private Process currentProcess;
-	
+	/**
+	 * call Resource(ProcessGenerator) constructor with new ProcessGenerator(50,10,200) as default
+	 */
 	public Resource(){
 		this(new ProcessGenerator(50,10,200));	
 	}
-	
+	/**
+	 * constructs new Resource with given ProcessGenerator 
+	 * @param pg ProcessGenerator
+	 */
 	public Resource(ProcessGenerator pg){
 		this.procGen1 = pg;
 		timer = new Timer();
@@ -34,7 +39,10 @@ public class Resource {
 		dispossed = new PriorityQueue<Process>(new ComparatorProcessProcessTime());
 		currentProcess = null;
 	}
-	
+	/**
+	 * simulate Processes for Resource specified by ProcessGenerator
+	 * @param numberOfProcesses - how many processes will be generated
+	 */
 	public void simulateProcesses(int numberOfProcesses){
 		Process[] arrayOfProc = procGen1.generateProcesses(numberOfProcesses);
 		for(Process p: arrayOfProc)
@@ -42,7 +50,9 @@ public class Resource {
 		
 		doneProcesses = new Process[numberOfProcesses];
 	}
-	
+	/**
+	 * prints data of done processes, prints average waiting time of processes
+	 */
 	public void printDoneData(){
 		double averageWaitingTime=0;
 		for(Process p : doneProcesses){
@@ -55,7 +65,10 @@ public class Resource {
 		System.out.printf("For:%5d  Processes Average waiting time was:%6.1f%n" , doneProcesses.length, averageWaitingTime);
 		
 	}
-	
+	/**
+	 * disposse current process
+	 * @throws NullPointerException 
+	 */
 	private void disposseProcess() throws NullPointerException{
 		if(currentProcess != null){
 			dispossed.add(currentProcess);
@@ -64,14 +77,19 @@ public class Resource {
 			throw new NullPointerException("Cannot disposse null Process");
 			
 	}
-	
+	/**
+	 * moves current process to done
+	 * @throws IndexOutOfBoundsException
+	 */
 	private void moveCurrentToDone() throws IndexOutOfBoundsException{
 		if(doneCounter< doneProcesses.length)
 			doneProcesses[doneCounter++] = currentProcess;
 		else
 			throw new IndexOutOfBoundsException("IsDone is full");
 	}
-	
+	/**
+	 * performs FCFS algorithm for simulated processes
+	 */
 	public void FCFSAlgorithm(){
 		resetTimer();
 		while(!initial.isEmpty()){
@@ -90,7 +108,10 @@ public class Resource {
 				timer.elapsed(1);
 		}
 	}
-	
+	/**
+	 * performs Round Robin algorithm for simulated processes
+	 * @param timeQuantum - define time quantum for round robin algorithm
+	 */
 	public void RRAlgorithm(int timeQuantum){
 		resetTimer();
 		
@@ -141,7 +162,9 @@ public class Resource {
 			
 		
 	}
-	
+	/**
+	 * perform Shortest Job First algorithm for simulated processes
+	 */
 	public void SJFAlgorithm(){
 		
 		resetTimer();
@@ -191,13 +214,24 @@ public class Resource {
 			
 		}
 	}
-	
+	/**
+	 * resets timer, sets current time to 0
+	 */
 	private void resetTimer(){
 		this.timer.resetTime();
 	}
+	/**
+	 * checks if Process p is shorter than current process
+	 * @param p Process to check
+	 * @return true if Process p is shorter, else false
+	 */
 	private boolean isShorter(Process p){
 		return currentProcess.getProcessTime() + currentProcess.getWasDoneTime() > p.getProcessTime() + p.getWasDoneTime();
 	}
+	/**
+	 * sets proper process as current
+	 * @throws NullPointerException
+	 */
 	private void getNextProcess() throws NullPointerException{
 		try{
 			currentProcess = initial.poll();
@@ -205,7 +239,10 @@ public class Resource {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * checks if next process is available
+	 * @return true if next process is available, else false
+	 */
 	private boolean isNextAvailable(){
 		
 		if(!initial.isEmpty() &&  initial.peek().getApproachTime() >= timer.getCurrentTime())
@@ -213,7 +250,10 @@ public class Resource {
 		else
 			return false;
 	}
-	
+	/**
+	 * adds specified time to all already approached processes and waiting for Resource
+	 * @param int time - waiting time 
+	 */
 	private void addWaitingTime(int time){
 		if(initial!=null){
 			for(Process p: initial){

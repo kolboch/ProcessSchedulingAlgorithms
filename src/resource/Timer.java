@@ -28,7 +28,9 @@ public class Timer {
 	public void elapsed(int timeElapsed){
 		this.currentTime += timeElapsed;
 	}
-	
+	/**
+	 * sets curent time to 0
+	 */
 	public void resetTime(){
 		this.currentTime =0;
 	}
