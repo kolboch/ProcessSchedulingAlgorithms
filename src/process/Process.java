@@ -38,6 +38,12 @@ public class Process {
 		this.wasDoneTime =0;
 		this.awaitTime =0;
 	}
+	public Process(Process p){
+		this.processTime = p.getProcessTime();
+		this.approachTime = p.getApproachTime();
+		this.wasDoneTime = p.getWasDoneTime();
+		this.awaitTime = p.getAwaitTime();
+	}
 	/**
 	 * 
 	 * @return integer value of processTime
@@ -84,14 +90,14 @@ public class Process {
 	 * @return integer value of Process awaitTime 
 	 */
 	public int getAwaitTime(){
-		return this.awaitTime;
+		return awaitTime;
 	}
 	/**
 	 * increases awaitTime by integer parameter value
 	 * @param time 
 	 */
 	public void addAwaitTime(int time){
-		this.awaitTime += time;
+		awaitTime += time;
 	}
 	/**
 	 * @return String containing information about processTime, wasDoneTime, approachTime and awaitTime
@@ -105,16 +111,16 @@ public class Process {
 	 * @param int time
 	 */
 	public void doProcessFor(int time){
-		this.processTime -= time;
-		this.wasDoneTime += time;
+		processTime -= time;
+		wasDoneTime += time;
 	}
 	/**
 	 * reduces procesTime by 1 and
 	 * increases wasDoneTime by 1
 	 */
 	public void doProcessForTimeUnit(){
-		this.processTime -= 1;
-		this.wasDoneTime += 1;
+		processTime -= 1;
+		wasDoneTime += 1;
 	}
 	
 	
