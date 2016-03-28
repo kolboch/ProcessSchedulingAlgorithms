@@ -38,6 +38,7 @@ public class Resource {
 		initial = new PriorityQueue<Process>(new ComparatorProcessApproachTime());
 		dispossed = new PriorityQueue<Process>(new ComparatorProcessProcessTime());
 		currentProcess = null;
+		this.doneProcesses = new Process[5]; //added for testing 
 	}
 	/**
 	 * simulate Processes for Resource specified by ProcessGenerator
@@ -71,7 +72,8 @@ public class Resource {
 	 */
 	private void disposseProcess() throws NullPointerException{
 		if(currentProcess != null){
-			dispossed.add(currentProcess);
+			dispossed.add(new Process(currentProcess));
+			currentProcess=null;
 		}
 		else
 			throw new NullPointerException("Cannot disposse null Process");
@@ -82,8 +84,10 @@ public class Resource {
 	 * @throws IndexOutOfBoundsException
 	 */
 	private void moveCurrentToDone() throws IndexOutOfBoundsException{
-		if(doneCounter< doneProcesses.length)
-			doneProcesses[doneCounter++] = currentProcess;
+		if(doneCounter< doneProcesses.length){
+			doneProcesses[doneCounter] = new Process(currentProcess);
+			doneCounter++;
+		}
 		else
 			throw new IndexOutOfBoundsException("IsDone is full");
 	}
@@ -91,21 +95,20 @@ public class Resource {
 	 * performs FCFS algorithm for simulated processes
 	 */
 	public void FCFSAlgorithm(){
-		resetTimer();
+		
 		while(!initial.isEmpty()){
 			if(isNextAvailable()){
 				currentProcess = initial.poll();
-				
 				while(!currentProcess.isDone()){
 					currentProcess.doProcessForTimeUnit();
-					addWaitingTime(1);
 					timer.elapsed(1);
+					addWaitingTime(1);
 				}
-				
 				moveCurrentToDone();
 			}
-			else
+			else{
 				timer.elapsed(1);
+			}
 		}
 	}
 	/**
@@ -113,61 +116,59 @@ public class Resource {
 	 * @param timeQuantum - define time quantum for round robin algorithm
 	 */
 	public void RRAlgorithm(int timeQuantum){
-		resetTimer();
 		
-		while(!initial.isEmpty() || !dispossed.isEmpty()){
+		while(!initial.isEmpty() && !dispossed.isEmpty()){
+			
 			if(currentProcess == null){
 				if(isNextAvailable())
-					currentProcess = initial.poll();
-				else if(dispossed.isEmpty())
-					timer.elapsed(1);
+					getNextProcess();
 				else
-					currentProcess = dispossed.poll();
+					timer.elapsed(1);
 			}
-			
-			else {
+			else{
 				
 				if(currentProcess.isDone()){
+					
 					moveCurrentToDone();
-					if(isNextAvailable()){
+
+					if(isNextAvailable())
 						getNextProcess();
-					}
 					else if(!dispossed.isEmpty())
-						currentProcess = dispossed.poll();
+						nextFromDispossed();
 				}
 				else{
-				
-				currentProcess.doProcessFor(timeQuantum);
-				timer.elapsed(timeQuantum);
-				
-					if(isNextAvailable()){
-						Process temp = initial.poll();
+					currentProcess.doProcessFor(timeQuantum);
+					timer.elapsed(timeQuantum);
+					addWaitingTime(timeQuantum);
 					
+					if(isNextAvailable()){
 						disposseProcess();
-						currentProcess = temp;
-						
-							
+						getNextProcess();
 					}
 					else if(!dispossed.isEmpty()){
 						disposseProcess();
-						currentProcess = dispossed.poll();
+						nextFromDispossed();
 					}
-						
-				addWaitingTime(timeQuantum);
-				}
-			}
-		}
+					
+				}//else inside
+				
+				
+			}//else
+		
+		}//while
+		
+	}
 				
 				
 			
 		
-	}
+	
 	/**
 	 * perform Shortest Job First algorithm for simulated processes
 	 */
 	public void SJFAlgorithm(){
 		
-		resetTimer();
+		
 		while(!initial.isEmpty() || !dispossed.isEmpty()){
 			
 			if(currentProcess == null){
@@ -214,12 +215,7 @@ public class Resource {
 			
 		}
 	}
-	/**
-	 * resets timer, sets current time to 0
-	 */
-	private void resetTimer(){
-		this.timer.resetTime();
-	}
+	
 	/**
 	 * checks if Process p is shorter than current process
 	 * @param p Process to check
@@ -245,30 +241,44 @@ public class Resource {
 	 */
 	private boolean isNextAvailable(){
 		
-		if(!initial.isEmpty() &&  initial.peek().getApproachTime() >= timer.getCurrentTime())
+		if(!initial.isEmpty() &&  timer.getCurrentTime() >= initial.peek().getApproachTime())
 			return true;
 		else
 			return false;
+	}
+	/**
+	 * sets currentProcess to head of dispossed queue
+	 */
+	private void nextFromDispossed(){
+		currentProcess = dispossed.poll();
 	}
 	/**
 	 * adds specified time to all already approached processes and waiting for Resource
 	 * @param int time - waiting time 
 	 */
 	private void addWaitingTime(int time){
-		if(initial!=null){
+		if(!initial.isEmpty()){
+			
 			for(Process p: initial){
-				if(p.getApproachTime() > timer.getCurrentTime())
+				if(timer.getCurrentTime() > p.getApproachTime()){
 					p.addAwaitTime(time);
+				}
 			}
+			
 		}
-		if(dispossed != null){
+		if(!dispossed.isEmpty()){
+			
 			for(Process p: dispossed){
-				if(p.getApproachTime() > timer.getCurrentTime())
+				if(timer.getCurrentTime() > p.getApproachTime())
 					p.addAwaitTime(time);
 			}
+			
 		}
 	}
-	
+	//added for testing
+	public void addProcessToQueue(Process p){
+		initial.add(p);
+	}
 	
 	
 	
