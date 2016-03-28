@@ -37,8 +37,7 @@ public class Resource {
 		timer = new Timer();
 		initial = new PriorityQueue<Process>(new ComparatorProcessApproachTime());
 		dispossed = new PriorityQueue<Process>(new ComparatorProcessProcessTime());
-		currentProcess = null;
-		this.doneProcesses = new Process[5]; //added for testing 
+		currentProcess = null; 
 	}
 	/**
 	 * simulate Processes for Resource specified by ProcessGenerator
@@ -116,48 +115,50 @@ public class Resource {
 	 * @param timeQuantum - define time quantum for round robin algorithm
 	 */
 	public void RRAlgorithm(int timeQuantum){
-		
-		while(!initial.isEmpty() && !dispossed.isEmpty()){
-			
-			if(currentProcess == null){
-				if(isNextAvailable())
-					getNextProcess();
-				else
-					timer.elapsed(1);
-			}
-			else{
-				
-				if(currentProcess.isDone()){
-					
-					moveCurrentToDone();
-
+	
+			while(!initial.isEmpty() || !dispossed.isEmpty() || !currentProcess.isDone()){
+				if(currentProcess == null){
 					if(isNextAvailable())
-						getNextProcess();
-					else if(!dispossed.isEmpty())
-						nextFromDispossed();
+						currentProcess = initial.poll();
+					else if(dispossed.isEmpty())
+						timer.elapsed(1);
+					else
+						currentProcess = dispossed.poll();
 				}
-				else{
+				
+				else {
+					
+					if(currentProcess.isDone()){
+						moveCurrentToDone();
+						if(isNextAvailable()){
+							getNextProcess();
+						}
+						else if(!dispossed.isEmpty())
+							currentProcess = dispossed.poll();
+					}
+					else{
+					
 					currentProcess.doProcessFor(timeQuantum);
 					timer.elapsed(timeQuantum);
+					
+						if(isNextAvailable()){
+							Process temp = initial.poll();
+						
+							disposseProcess();
+							currentProcess = temp;
+							
+								
+						}
+						else if(!dispossed.isEmpty()){
+							disposseProcess();
+							currentProcess = dispossed.poll();
+						}
+							
 					addWaitingTime(timeQuantum);
-					
-					if(isNextAvailable()){
-						disposseProcess();
-						getNextProcess();
 					}
-					else if(!dispossed.isEmpty()){
-						disposseProcess();
-						nextFromDispossed();
-					}
-					
-				}//else inside
-				
-				
-			}//else
-		
-		}//while
-		
-	}
+				}
+			}
+		}
 				
 				
 			
@@ -169,7 +170,7 @@ public class Resource {
 	public void SJFAlgorithm(){
 		
 		
-		while(!initial.isEmpty() || !dispossed.isEmpty()){
+		while(!initial.isEmpty() || !dispossed.isEmpty() || !currentProcess.isDone()){
 			
 			if(currentProcess == null){
 				if(isNextAvailable())
@@ -200,19 +201,13 @@ public class Resource {
 							disposseProcess();
 							currentProcess = temp;
 						}
-						else 
+						else {
 							dispossed.add(temp);
-							
+						}
 					}
 				addWaitingTime(1);
 				}
-				
-				
 			}
-			
-			
-			
-			
 		}
 	}
 	
@@ -246,12 +241,7 @@ public class Resource {
 		else
 			return false;
 	}
-	/**
-	 * sets currentProcess to head of dispossed queue
-	 */
-	private void nextFromDispossed(){
-		currentProcess = dispossed.poll();
-	}
+	
 	/**
 	 * adds specified time to all already approached processes and waiting for Resource
 	 * @param int time - waiting time 
@@ -275,10 +265,7 @@ public class Resource {
 			
 		}
 	}
-	//added for testing
-	public void addProcessToQueue(Process p){
-		initial.add(p);
-	}
+	
 	
 	
 	
