@@ -11,7 +11,7 @@ public class ResourceTestSJF {
 		
 		Resource resource = new Resource(procGen);
 		
-		resource.simulateProcesses(10);
+		resource.simulateProcesses(5);
 		
 		resource.SJFAlgorithm();
 		

@@ -116,7 +116,7 @@ public class Resource {
 	 */
 	public void RRAlgorithm(int timeQuantum){
 	
-			while(!initial.isEmpty() || !dispossed.isEmpty() || !currentProcess.isDone()){
+			while(!initial.isEmpty() || !dispossed.isEmpty() || doneCounter < doneProcesses.length){
 				if(currentProcess == null){
 					if(isNextAvailable())
 						currentProcess = initial.poll();
@@ -153,7 +153,7 @@ public class Resource {
 							disposseProcess();
 							currentProcess = dispossed.poll();
 						}
-							
+						
 					addWaitingTime(timeQuantum);
 					}
 				}
@@ -170,7 +170,7 @@ public class Resource {
 	public void SJFAlgorithm(){
 		
 		
-		while(!initial.isEmpty() || !dispossed.isEmpty() || !currentProcess.isDone()){
+		while(!initial.isEmpty() || !dispossed.isEmpty() || doneCounter < doneProcesses.length){
 			
 			if(currentProcess == null){
 				if(isNextAvailable())

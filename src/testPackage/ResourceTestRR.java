@@ -11,7 +11,7 @@ public class ResourceTestRR {
 		
 		Resource resource = new Resource(procGen);
 		
-		resource.simulateProcesses(20);
+		resource.simulateProcesses(5);
 		
 		resource.RRAlgorithm(10);
 		
