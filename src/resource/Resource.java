@@ -50,6 +50,17 @@ public class Resource {
 		
 		doneProcesses = new Process[numberOfProcesses];
 	}
+	public String printAverageWaitingTime(){
+		double average = 0;
+		for(Process p : doneProcesses){
+			if(p != null){
+				average += p.getAwaitTime();
+			}
+		}
+		average /= doneProcesses.length;
+		return String.format("%6.1f%n" , average);
+	}
+	
 	/**
 	 * prints data of done processes, prints average waiting time of processes
 	 */

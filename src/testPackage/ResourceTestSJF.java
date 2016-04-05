@@ -1,7 +1,7 @@
 package testPackage;
-import resource.Resource;
 import process.ProcessGenerator;
-
+import resource.Resource;
+import usefullStaff.OutputToFile;
 
 public class ResourceTestSJF {
 
@@ -11,11 +11,15 @@ public class ResourceTestSJF {
 		
 		Resource resource = new Resource(procGen);
 		
-		resource.simulateProcesses(5);
+		resource.simulateProcesses(10);
 		
 		resource.SJFAlgorithm();
 		
 		resource.printDoneData();
+		
+		OutputToFile out = new OutputToFile();
+		
+		out.dataToFile("D:\\javaeclipseprog\\Tutoriale\\TestDocumentOutput.txt", resource.printAverageWaitingTime());
 		
 		
 	}

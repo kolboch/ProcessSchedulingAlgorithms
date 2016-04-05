@@ -17,7 +17,5 @@ public class ResourceTest {
 		resource.FCFSAlgorithm();
 		
 		resource.printDoneData();
-		
-		
 	}
 }
