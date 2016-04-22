@@ -1,7 +1,7 @@
 package testPackage;
 import process.ProcessGenerator;
 import resource.Resource;
-import usefullStaff.OutputToFile;
+import output.OutputToFile;
 
 public class ResourceTestSJF {
 
