@@ -170,11 +170,6 @@ public class Resource {
 				}
 			}
 		}
-				
-				
-			
-		
-	
 	/**
 	 * perform Shortest Job First algorithm for simulated processes
 	 */
@@ -276,8 +271,5 @@ public class Resource {
 			
 		}
 	}
-	
-	
-	
 	
 }
